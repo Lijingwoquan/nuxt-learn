@@ -2,6 +2,11 @@
 definePageMeta({
   layout: "orange",
   middleware: "auth",
+  validate: async (route) => {
+    // 检查id是否由数字组成
+    
+    return true;
+  },
 });
 </script>
 
