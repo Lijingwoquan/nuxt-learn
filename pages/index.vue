@@ -3,6 +3,13 @@
     <h1>首页</h1>
     <NuxtLink to="/about">关于页面</NuxtLink>
   </div>
+  <Meta name="description" content="这是一个简单网站" />
+
+  <!-- <Head>
+    <Title>{{ title }}</Title>
+    <Meta name="description" :content="title" />
+    <Style type="text/css" children="body { background-color: green; }" />
+  </Head> -->
 </template>
 
 <script setup lang="ts">
