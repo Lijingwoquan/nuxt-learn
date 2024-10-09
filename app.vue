@@ -4,6 +4,14 @@
   </NuxtLayout>
 </template>
 
+<script setup lang="ts">
+useHead({
+  titleTemplate: (titleChunk) => {
+    return titleChunk ? `${titleChunk} - 网站名称` : "网站名称";
+  },
+});
+</script>
+
 <style>
 .layout-enter-active,
 .layout-leave-active {
@@ -14,5 +22,3 @@
   filter: grayscale(1);
 }
 </style>
-
-
