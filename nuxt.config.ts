@@ -5,18 +5,16 @@ export default defineNuxtConfig({
   app: {
     layoutTransition: { name: "layout", mode: "out-in" },
   },
+  runtimeConfig: {
+    // Keys within public are also exposed client-side
+    public: {
+      apiBase: "http://127.0.0.1:8080/api",
+    },
+  },
   modules: ["@element-plus/nuxt", "@nuxtjs/tailwindcss"],
   css: ["element-plus/dist/index.css", "~/assets/css/tailwind.css"],
   build: {
     transpile: process.env.prod ? ["element-plus"] : [],
-  },
-  $production: {
-    routeRules: {
-      "/**": { isr: true },
-    },
-  },
-  $development: {
-    //
   },
   nitro: {},
   postcss: {
