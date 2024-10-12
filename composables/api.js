@@ -55,13 +55,13 @@ export const api = {
   get(url, options) {
     return commonApi("GET", url, options);
   },
-  post() {
+  post(url, options) {
     return commonApi("POST", url, options);
   },
-  push() {
+  push(url, options) {
     return commonApi("PUSH", url, options);
   },
-  delete() {
+  delete(url, options) {
     return commonApi("DELETE", url, options);
   },
 };
