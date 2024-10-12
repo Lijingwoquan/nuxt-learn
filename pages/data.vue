@@ -42,12 +42,11 @@ const postApi = () => {
 const tokenApi = async () => {
   await needTokenRequest();
 };
-tokenApi();
 
 const authStore = useAuthStore();
 
 const logout = () => {
   authStore.removeToken();
-  navigateTo("/login")
+  navigateTo("/login");
 };
 </script>

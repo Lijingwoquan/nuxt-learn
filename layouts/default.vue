@@ -4,11 +4,12 @@
     <NuxtLink to="/about">关于页面</NuxtLink>
     <NuxtLink to="/data">数据页面</NuxtLink>
     <NuxtLink to="/private">个人数据页面</NuxtLink>
+    <NuxtLink to="/login">登录页面</NuxtLink>
   </el-header>
 
   <el-main class="bg-red-200">
     <slot />
   </el-main>
 
-  <el-footer>这是底部</el-footer>
+  <el-footer>底部</el-footer>
 </template>

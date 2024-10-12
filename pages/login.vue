@@ -6,7 +6,11 @@
 <script setup>
 import { useAuthStore } from "~/store/auth";
 
+definePageMeta({
+  middleware: "login",
+});
 const authStore = useAuthStore();
+
 const login = () => {
   authStore.setToken(parseInt(Math.random() * 1000000000));
   navigateTo("/data");
