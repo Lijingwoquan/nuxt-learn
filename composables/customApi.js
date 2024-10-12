@@ -1,5 +1,9 @@
+import { useAuthStore } from "~/store/auth";
+
 const apiCore = (url, opt) => {
   const config = useRuntimeConfig();
+
+  const authStore = useAuthStore();
 
   const apiFun = () => {
     if (import.meta.client) {
@@ -16,9 +20,7 @@ const apiCore = (url, opt) => {
     retry: false,
     onRequest({ options }) {
       let token = "";
-      if (import.meta.client) {
-        token = localStorage.getItem("token");
-      }
+      token = authStore.getToken();
       if (token) {
         options.headers = {
           Authorization: `Bearer ${token}`,
@@ -31,16 +33,17 @@ const apiCore = (url, opt) => {
     //   console.log(error);
     // },
     onResponse({ request, response, options }) {
-      // Process the response data
       if (response.status >= 200 && response.status <= 300) {
         console.log(response._data);
       }
     },
     onResponseError({ request, response, options }) {
-      // Handle the response errors
-      nuxtApp.runWithContext(() => {
-        navigateTo("/login");
-      });
+      if (response._data.msg === "需要登录") {
+        nuxtApp.runWithContext(() => {
+          navigateTo("/login");
+        });
+      }
+
       if (import.meta.client) {
         ElMessage({
           message: response?._data.msg || "未知错误",

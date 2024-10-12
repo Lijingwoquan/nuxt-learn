@@ -4,8 +4,11 @@
 </template>
 
 <script setup>
+import { useAuthStore } from "~/store/auth";
+
+const authStore = useAuthStore();
 const login = () => {
-  localStorage.setItem("token", "123");
+  authStore.setToken(parseInt(Math.random() * 1000000000));
   navigateTo("/data");
 };
 </script>

@@ -10,11 +10,13 @@
 
 <script setup lang="ts">
 import { getUserInfo, needTokenRequest, postUserInfo } from "~/api/user";
+import { useAuthStore } from "~/store/auth";
 
-definePageMeta({
-  layout: "default",
-  // middleware: "auth",
-});
+// definePageMeta({
+//   layout: "default",
+//   // middleware: "auth",
+// });
+
 const serverApi = () => {
   getUserInfo("10");
 };
@@ -37,12 +39,15 @@ const postApi = () => {
   });
 };
 
-const tokenApi = () => {
-  needTokenRequest();
+const tokenApi = async () => {
+  await needTokenRequest();
 };
 tokenApi();
 
+const authStore = useAuthStore();
+
 const logout = () => {
-  localStorage.removeItem("token");
+  authStore.removeToken();
+  navigateTo("/login")
 };
 </script>
