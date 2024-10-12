@@ -9,4 +9,10 @@ useHead({
   title: metaTitle,
   meta: [{ name: "keywords", content: metaKeywords }],
 });
+
+const count = useState("count", () => 0);
+if (import.meta.server) {
+  count.value++;
+}
+console.log(useState("count").value);
 </script>

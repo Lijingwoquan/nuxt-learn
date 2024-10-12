@@ -9,11 +9,13 @@ const apiCore = (url, opt) => {
     }
   };
 
+  const nuxtApp = useNuxtApp();
+
   return useFetch(url, {
     baseURL: config.public.apiBase,
     retry: false,
     onRequest({ options }) {
-      let token = "1";
+      let token = "";
       if (import.meta.client) {
         token = localStorage.getItem("token");
       }
@@ -22,6 +24,28 @@ const apiCore = (url, opt) => {
           Authorization: `Bearer ${token}`,
           ...options.headers,
         };
+      }
+    },
+    // onRequestError({ request, options, error }) {
+    //   // Handle the request errors
+    //   console.log(error);
+    // },
+    onResponse({ request, response, options }) {
+      // Process the response data
+      if (response.status >= 200 && response.status <= 300) {
+        console.log(response._data);
+      }
+    },
+    onResponseError({ request, response, options }) {
+      // Handle the response errors
+      nuxtApp.runWithContext(() => {
+        navigateTo("/login");
+      });
+      if (import.meta.client) {
+        ElMessage({
+          message: response?._data.msg || "未知错误",
+          type: "error",
+        });
       }
     },
     ...opt,
@@ -37,15 +61,6 @@ const commonApi = (method, url, options) => {
       if (res.status.value === "success") {
         resolve(res.data.value);
       } else {
-        if (import.meta.client) {
-          ElMessage({
-            message: res.error.value.data?.msg || "未知错误",
-            type: "error",
-          });
-          if (res.error.value.data?.msg === "需要登录") {
-            navigateTo("/login");
-          }
-        }
         reject(res.error.value.data?.msg || res.error.value);
       }
     });

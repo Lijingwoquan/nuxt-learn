@@ -42,10 +42,6 @@ const tokenApi = () => {
 };
 tokenApi();
 
-onMounted(() => {
-  tokenApi();
-});
-
 const logout = () => {
   localStorage.removeItem("token");
 };
