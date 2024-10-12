@@ -1,4 +1,14 @@
+import { needTokenRequest } from "~/api/user";
+
 export default defineNuxtRouteMiddleware((to, from) => {
-  // console.log(to);
-  // console.log(from);
+  needTokenRequest().catch((err) => {
+    if (err === "需要登录") {
+      const nuxtApp = useNuxtApp();
+      nuxtApp.runWithContext(() => {
+        navigateTo({
+          path: "/login",
+        });
+      });
+    }
+  });
 });

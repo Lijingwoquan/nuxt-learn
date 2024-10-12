@@ -1,46 +1,52 @@
 <template>
   <el-button type="primary" @click="getApi">get请求</el-button>
   <el-button type="primary" @click="postApi">post请求</el-button>
-  <el-button type="primary" @click="pushApi">push请求</el-button>
-  <el-button type="primary" @click="deleteApi">delete请求</el-button>
 
-  <el-button type="primary" @click="api2">错误请求</el-button>
+  <el-button type="primary" @click="errorApi">错误请求</el-button>
 
-  <el-button type="primary" @click="login">模拟登录</el-button>
   <el-button type="primary" @click="tokenApi">token请求</el-button>
+  <el-button type="primary" @click="logout">退出登录</el-button>
 </template>
 
 <script setup lang="ts">
+import { getUserInfo, needTokenRequest, postUserInfo } from "~/api/user";
+
 definePageMeta({
   layout: "default",
-  middleware: "auth",
+  // middleware: "auth",
 });
-const api0 = () => {
-  api.get("/user?id=10").then((res) => {
-    console.log(res);
+const serverApi = () => {
+  getUserInfo("10");
+};
+
+// serverApi();
+
+const errorApi = () => {
+  api.get("/user?id=a");
+};
+
+const getApi = () => {
+  getUserInfo("10");
+};
+
+const postApi = () => {
+  postUserInfo({
+    id: 10,
+    username: "lzh",
+    password: "123",
   });
 };
 
-// api0();
-
-const getApi = () => {
-  api
-    .get("/user?id=10")
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+const tokenApi = () => {
+  needTokenRequest();
 };
+tokenApi();
 
-const post = () => {};
+onMounted(() => {
+  tokenApi();
+});
 
-const push = () => {};
-
-const deleteApi = () => {};
-
-const login = () => {};
-
-const tokenApi = () => {};
+const logout = () => {
+  localStorage.removeItem("token");
+};
 </script>
