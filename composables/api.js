@@ -1,6 +1,6 @@
 import { useFetch } from "nuxt/app";
 
-export const apiBefore = (url, options) => {
+const apiCore = (url, options) => {
   const config = useRuntimeConfig();
 
   return useFetch(url, {
@@ -15,38 +15,53 @@ export const apiBefore = (url, options) => {
         ...options.headers,
       };
     },
+    // onRequestError({ request, options, error }) {
+    //   // Handle the request errors
+    // },
+    // onResponse({ request, response, options }) {
+    //   // Process the response data
+    //   if (response.status <= 300) {
+    //   }
+    // },
+    // onResponseError({ request, response, options }) {
+    //   // Handle the response errors
+    // },
     ...options,
   });
 };
 
-export const getApi = (url, options = {}) => {
+const commonApi = (method, url, options) => {
   return new Promise((resolve, reject) => {
-    apiBefore(url, {
-      method: "GET",
+    apiCore(url, {
+      method,
       ...options,
-    })
-      .then((res) => {
+    }).then((res) => {
+      if (res.status.value === "success") {
         resolve(res.data.value);
-      })
-      .catch((err) => {
-        reject(err);
-      });
+      } else {
+        if (import.meta.client) {
+          ElMessage({
+            message: res.error.value.data?.msg || "未知错误",
+            type: "error",
+          });
+        }
+        reject(res.error.value.data);
+      }
+    });
   });
 };
 
-// useFetch(requestUrl, {
-//   onRequest({ request, options }) {
-//     // Set the request headers
-//     // note that this relies on ofetch >= 1.4.0 - you may need to refresh your lockfile
-//     options.headers.set("Authorization", "...");
-//   },
-//   onRequestError({ request, options, error }) {
-//     // Handle the request errors
-//   },
-//   onResponse({ request, response, options }) {
-//     // Process the response data
-//   },
-//   onResponseError({ request, response, options }) {
-//     // Handle the response errors
-//   },
-// });
+export const api = {
+  get(url, options) {
+    return commonApi("GET", url, options);
+  },
+  post() {
+    return commonApi("POST", url, options);
+  },
+  push() {
+    return commonApi("PUSH", url, options);
+  },
+  delete() {
+    return commonApi("DELETE", url, options);
+  },
+};

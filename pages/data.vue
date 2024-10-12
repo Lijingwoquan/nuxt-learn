@@ -1,6 +1,13 @@
 <template>
-  <el-button type="primary" @click="api1">正确请求</el-button>
+  <el-button type="primary" @click="getApi">get请求</el-button>
+  <el-button type="primary" @click="postApi">post请求</el-button>
+  <el-button type="primary" @click="pushApi">push请求</el-button>
+  <el-button type="primary" @click="deleteApi">delete请求</el-button>
+
   <el-button type="primary" @click="api2">错误请求</el-button>
+
+  <el-button type="primary" @click="login">模拟登录</el-button>
+  <el-button type="primary" @click="tokenApi">token请求</el-button>
 </template>
 
 <script setup lang="ts">
@@ -9,22 +16,31 @@ definePageMeta({
   middleware: "auth",
 });
 const api0 = () => {
-  getApi("/user?id=10").then((res) => {
+  api.get("/user?id=10").then((res) => {
     console.log(res);
   });
 };
 
-api0();
+// api0();
 
-const api1 = () => {
-  getApi("/user?id=10").then((res) => {
-    console.log(res);
-  });
+const getApi = () => {
+  api
+    .get("/user?id=10")
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
-const api2 = () => {
-  getApi("/user?id=a").then((res) => {
-    console.log(res);
-  });
-};
+const post = () => {};
+
+const push = () => {};
+
+const deleteApi = () => {};
+
+const login = () => {};
+
+const tokenApi = () => {};
 </script>
