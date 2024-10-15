@@ -1,26 +1,16 @@
-import { useAuthStore } from "~/store/auth";
-
-const apiCore = (url, opt) => {
+// 需要进行服务端渲染
+const apiCore = async (url, opt) => {
   const config = useRuntimeConfig();
-
-  const authStore = useAuthStore();
-
-  const apiFun = () => {
-    if (import.meta.client) {
-      return useFetch;
-    } else {
-      return $fetch;
-    }
-  };
 
   const nuxtApp = useNuxtApp();
 
-  return useFetch(url, {
+  return await useFetch(url, {
     baseURL: config.public.apiBase,
     retry: false,
     onRequest({ options }) {
       let token = "";
-      token = authStore.getToken();
+
+      token = useCookie("auth_token").value;
       if (token) {
         options.headers = {
           Authorization: `Bearer ${token}`,
@@ -30,14 +20,17 @@ const apiCore = (url, opt) => {
     },
     // onRequestError({ request, options, error }) {
     //   // Handle the request errors
-    //   console.log(error);
+    //   console.log("onRequestError" + error);
     // },
     onResponse({ request, response, options }) {
+      // Process the response data
       if (response.status >= 200 && response.status <= 300) {
+        console.log("服务端端请求");
         console.log(response._data);
       }
     },
     onResponseError({ request, response, options }) {
+      // Handle the response errors
       if (response._data.msg === "需要登录") {
         nuxtApp.runWithContext(() => {
           navigateTo("/login");
@@ -61,11 +54,10 @@ const commonApi = (method, url, options) => {
       method,
       ...options,
     }).then((res) => {
-      if (res.status.value === "success") {
-        resolve(res.data.value);
-      } else {
-        reject(res.error.value.data?.msg || res.error.value);
+      if (res.error.value) {
+        reject(res.error.value.data);
       }
+      resolve(res.data.value);
     });
   });
 };
@@ -80,8 +72,8 @@ export const api = {
       ...options,
     });
   },
-  push(url, form, options = {}) {
-    return commonApi("PUSH", url, {
+  put(url, form, options = {}) {
+    return commonApi("PUT", url, {
       body: form,
       ...options,
     });
